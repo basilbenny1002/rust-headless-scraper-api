@@ -21,6 +21,7 @@ WORKDIR /app
 COPY . .
 
 RUN cargo build --release
+RUN cargo fix --bin rust_web_scraper
 
 # Run the binary
 CMD ["r./target/release/rust_web_scraper.exe"]
