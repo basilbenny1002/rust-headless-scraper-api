@@ -8,10 +8,13 @@ use headless_chrome::{Browser, LaunchOptionsBuilder};
 use regex::Regex;
 use serde::Deserialize;
 use serde_json::json;
-use std::{collections::HashMap, net::SocketAddr, time::Duration};
+use std::{collections::HashMap, net::SocketAddr, time::Duration, env};
 
 #[tokio::main]
 async fn main() {
+    // Set the CHROME_BIN environment variable
+    env::set_var("CHROME_BIN", "/usr/bin/chromium-browser");
+
     let app = Router::new()
         .route("/", get(root_handler))
         .route("/scrape", get(scrape_handler));
@@ -41,19 +44,16 @@ async fn scrape_handler(Query(params): Query<ScrapeParams>) -> impl IntoResponse
     }
 }
 
-fn scrape_and_extract_emails(target_url: &str) -> Result<Vec<String>, failure::Error> {
+fn scrape_and_extract_emails(target_url: &str) -> Result<Vec<String>, Box<dyn std::error::Error>> {
     let browser = Browser::new(
         LaunchOptionsBuilder::default()
             .headless(true)
-            .build()
-            .unwrap(),
+            .build()?,
     )?;
 
     let tab = browser.new_tab()?;
     tab.navigate_to(target_url)?;
     tab.wait_until_navigated()?;
-
-    std::thread::sleep(Duration::from_secs(10));
 
     let html_content = tab
         .evaluate("document.documentElement.outerHTML", false)?
