@@ -24,4 +24,4 @@ RUN cargo build --release
 # RUN cargo fix --bin rust_web_scraper --allow-no-vcs
 
 # Run the binary
-CMD ["./target/release/rust_web_scraper.exe"]
+CMD ["./target/release/rust_web_scraper"]
