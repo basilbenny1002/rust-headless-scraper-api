@@ -1,4 +1,4 @@
-FROM rust:1.75
+FROM rust:1.86.0
 
 # Install Chromium and dependencies
 RUN apt-get update && apt-get install -y \
