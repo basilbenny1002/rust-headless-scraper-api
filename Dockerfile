@@ -2,7 +2,7 @@ FROM rust:1.75
 
 # Install Chromium and dependencies
 RUN apt-get update && apt-get install -y \
-    chromium-browser \
+    chromium \
     libxss1 \
     libasound2 \
     libnss3 \
@@ -11,13 +11,13 @@ RUN apt-get update && apt-get install -y \
     fonts-liberation \
     && rm -rf /var/lib/apt/lists/*
 
-# Set environment variable so headless_chrome can find Chromium
-ENV CHROME_BIN=/usr/bin/chromium-browser
+# Set Chromium binary path for headless_chrome
+ENV CHROME_BIN=/usr/bin/chromium
 
-# Create app directory
+# Set working directory
 WORKDIR /app
 
-# Copy source and build
+# Copy project files and build
 COPY . .
 
 RUN cargo build --release
